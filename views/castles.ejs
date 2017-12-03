@@ -1,0 +1,10 @@
+<h1>This is the castles page.</h1>
+
+<% castles.forEach(function(castle){ %>
+    <div>
+        <h2>
+            <%= castle.name %>
+        </h2>
+        <img src="<%= castle.image %>" alt="">
+    </div>
+    <% }); %>
