@@ -1,3 +1,5 @@
+<% include partials/header %>
+
 <h1>This is the castles page.</h1>
 
 <% castles.forEach(function(castle){ %>
@@ -8,3 +10,5 @@
         <img src="<%= castle.image %>" alt="">
     </div>
     <% }); %>
+
+<% include partials/footer %>
