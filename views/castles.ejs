@@ -1,28 +1,30 @@
 <% include partials/header %>
 
-<div class="container">
-    <header class="jumbotron">
-        <div class="container">
-            <h1>Welcome to Castlepedia</h1>
-            <p>View castles from all over the world.</p>
-            <p>
-                <a class="btn btn-primary btn-lg" href="/castles/new">Add New Castle</a>
-            </p>
-        </div>
-    </header>
-
-    <div class="row text-center" style="display:flex; flex-wrap:wrap;">
-    <% castles.forEach(function(castle){ %>
-        <div class="col-md-3 col-sm-6">
-            <div class="card">
-                <img class="card-img-top" src="<%= castle.image %>" alt="">
-                <div class="card-body">
-                    <h4 class="card-title"><%= castle.name %></h4>
-                </div>
+    <div class="container">
+        <header class="jumbotron">
+            <div class="container">
+                <h1>Welcome to Castlepedia</h1>
+                <p>View castles from all over the world.</p>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="/castles/new">Add New Castle</a>
+                </p>
             </div>
-        </div>
-        <% }); %>
-    </div>
-</div>
+        </header>
 
-<% include partials/footer %>
+        <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+            <% castles.forEach(function(castle){ %>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <img class="card-img-top" src="<%= castle.image %>" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <%= castle.name %>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </div>
+
+    <% include partials/footer %>
