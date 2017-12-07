@@ -1,64 +1,33 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
 
+mongoose.connect("mongodb://localhost/castlepedia");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-var castles = [
-  {
-    name: "Dunluce Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Dunluce_Castle.jpg/256px-Dunluce_Castle.jpg"
-  },
-  {
-    name: "Dunguaire Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6b/Dunguaire_Castle%2C_Galway%2C_Ireland.png"
-  },
-  {
-    name: "Roscommon Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/52/Roscommon_Castle.JPG"
-  },
-  {
-    name: "Dunluce Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Dunluce_Castle.jpg/256px-Dunluce_Castle.jpg"
-  },
-  {
-    name: "Dunguaire Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6b/Dunguaire_Castle%2C_Galway%2C_Ireland.png"
-  },
-  {
-    name: "Roscommon Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/52/Roscommon_Castle.JPG"
-  },
-  {
-    name: "Dunluce Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Dunluce_Castle.jpg/256px-Dunluce_Castle.jpg"
-  },
-  {
-    name: "Dunguaire Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6b/Dunguaire_Castle%2C_Galway%2C_Ireland.png"
-  },
-  {
-    name: "Roscommon Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/52/Roscommon_Castle.JPG"
-  }
-];
+// SCHEMA SETUP
+var castleSchema = new mongoose.Schema({
+  name: String,
+  image: String
+});
+
+var Castle = mongoose.model("Castle", castleSchema);
 
 app.get("/", function(req, res) {
   res.render("landing");
 });
 
 app.get("/castles", function(req, res) {
-  res.render("castles", { castles: castles });
+  // Get all castles from DB
+  Castle.find({}, function(err, allCastles) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("castles", { castles: allCastles });
+    }
+  });
 });
 
 app.post("/castles", function(req, res) {
@@ -66,9 +35,15 @@ app.post("/castles", function(req, res) {
   var name = req.body.name;
   var image = req.body.image;
   var newCastle = { name: name, image: image };
-  castles.push(newCastle);
-  // redirect back to castles page
-  res.redirect("/castles");
+  // Create a new castle and save to DB
+  Castle.create(newCastle, function(err, newlyCreated) {
+    if (err) {
+      console.log(err);
+    } else {
+      // redirect back to castles page
+      res.redirect("/castles");
+    }
+  });
 });
 
 app.get("/castles/new", function(req, res) {
