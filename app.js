@@ -2,37 +2,11 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var Castle = require("./models/castle");
 
 mongoose.connect("mongodb://localhost/castlepedia");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-
-// SCHEMA SETUP
-var castleSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
-});
-
-var Castle = mongoose.model("Castle", castleSchema);
-
-// Castle.create(
-//   {
-//     name: "Dunluce Castle",
-//     image:
-//       "https://upload.wikimedia.org/wikipedia/commons/e/e8/Dunluce_Castle.jpg",
-//     description:
-//       "Dunluce Castlen is a now-ruined medieval castle in Northern Ireland."
-//   },
-//   function(err, castle) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log("Newly created castle:");
-//       console.log(castle);
-//     }
-//   }
-// );
 
 app.get("/", function(req, res) {
   res.render("landing");
