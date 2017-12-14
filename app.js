@@ -3,6 +3,9 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var Castle = require("./models/castle");
+var seedDB = require("./seeds");
+
+seedDB();
 
 mongoose.connect("mongodb://localhost/castlepedia");
 app.use(bodyParser.urlencoded({ extended: true }));
