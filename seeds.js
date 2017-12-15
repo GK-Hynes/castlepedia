@@ -40,7 +40,8 @@ function seedDB() {
             // Create a comment
             Comment.create(
               {
-                text: "This place is great"
+                text: "This place is great",
+                author: "Davey"
               },
               function(err, comment) {
                 if (err) {

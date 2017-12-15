@@ -5,11 +5,11 @@ var mongoose = require("mongoose");
 var Castle = require("./models/castle");
 var seedDB = require("./seeds");
 
-seedDB();
-
-mongoose.connect("mongodb://localhost/castlepedia");
+mongoose.connect("mongodb://localhost/castlepedia", { useMongoClient: true });
+mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+seedDB();
 
 app.get("/", function(req, res) {
   res.render("landing");
@@ -53,14 +53,17 @@ app.get("/castles/new", function(req, res) {
 //SHOW - shows more info about one castle
 app.get("/castles/:id", function(req, res) {
   // find the castle with the provided id
-  Castle.findById(req.params.id, function(err, foundCastle) {
-    if (err) {
-      console.log(err);
-    } else {
-      // render show template with that castle
-      res.render("show", { castle: foundCastle });
-    }
-  });
+  Castle.findById(req.params.id)
+    .populate("comments")
+    .exec(function(err, foundCastle) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(foundCastle);
+        // render show template with that castle
+        res.render("show", { castle: foundCastle });
+      }
+    });
 });
 
 app.listen(3000, function() {
