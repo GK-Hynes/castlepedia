@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var Castle = require("./models/castle");
+var Comment = require("./models/comment");
 var seedDB = require("./seeds");
 
 mongoose.connect("mongodb://localhost/castlepedia", { useMongoClient: true });
@@ -22,7 +23,7 @@ app.get("/castles", function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("index", { castles: allCastles });
+      res.render("castles/index", { castles: allCastles });
     }
   });
 });
@@ -47,7 +48,7 @@ app.post("/castles", function(req, res) {
 
 //NEW - show form to create new castle
 app.get("/castles/new", function(req, res) {
-  res.render("new.ejs");
+  res.render("castles/new");
 });
 
 //SHOW - shows more info about one castle
@@ -61,9 +62,47 @@ app.get("/castles/:id", function(req, res) {
       } else {
         console.log(foundCastle);
         // render show template with that castle
-        res.render("show", { castle: foundCastle });
+        res.render("castles/show", { castle: foundCastle });
       }
     });
+});
+
+//==========================
+// COMMENTS ROUTES
+//==========================
+
+app.get("/castles/:id/comments/new", function(req, res) {
+  // find castle by id
+  Castle.findById(req.params.id, function(err, castle) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("comments/new", { castle: castle });
+    }
+  });
+});
+
+app.post("/castles/:id/comments", function(req, res) {
+  //lookup castle using ID
+  Castle.findById(req.params.id, function(err, castle) {
+    if (err) {
+      console.log(err);
+      res.redirect("/castles");
+    } else {
+      Comment.create(req.body.comment, function(err, comment) {
+        if (err) {
+          console.log(err);
+        } else {
+          castle.comments.push(comment);
+          castle.save();
+          res.redirect("/castles/" + castle._id);
+        }
+      });
+    }
+  });
+  // create new comment
+  // connect new comment to castle
+  // redirect to castle showpage
 });
 
 app.listen(3000, function() {

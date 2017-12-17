@@ -1,0 +1,25 @@
+<% include ../partials/header %>
+
+    <h1>
+        <%= castle.name%>
+    </h1>
+
+    <img src="<%= castle.image%>" alt="Image of <%= castle.name%>">
+
+    <p>
+        <%=castle.description%>
+    </p>
+
+    <p>
+        <a class="btn btn-success" href="/castles/<%=castle._id%>/comments/new">Add New Comment</a>
+    </p>
+
+    <% castle.comments.forEach(function(comment){ %>
+        <p>
+            <strong>
+                <%= comment.author%>
+            </strong> -
+            <%= comment.text%>
+        </p>
+        <% }); %>
+            <% include ../partials/footer %>
