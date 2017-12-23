@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var localStrategy = require("passport-local");
+var session = require("express-session");
 var Castle = require("./models/castle");
 var Comment = require("./models/comment");
 var User = require("./models/user");
@@ -15,6 +16,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 seedDB();
+
+// PASSPORT CONFIGURATION
+app.use(
+  session({
+    secret: "Go raibh maith agat",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
   res.render("landing");
@@ -93,20 +109,43 @@ app.post("/castles/:id/comments", function(req, res) {
       console.log(err);
       res.redirect("/castles");
     } else {
+      // create new comment
       Comment.create(req.body.comment, function(err, comment) {
         if (err) {
           console.log(err);
         } else {
+          // connect new comment to castle
           castle.comments.push(comment);
           castle.save();
+          // redirect to castle showpage
           res.redirect("/castles/" + castle._id);
         }
       });
     }
   });
-  // create new comment
-  // connect new comment to castle
-  // redirect to castle showpage
+});
+
+// ==============
+// AUTH ROUTES
+// ==============
+
+// Show register form
+app.get("/register", function(req, res) {
+  res.render("register");
+});
+
+// Handle signup logic
+app.post("/register", function(req, res) {
+  var newUser = new User({ username: req.body.username });
+  User.register(newUser, req.body.password, function(err, user) {
+    if (err) {
+      console.log(err);
+      return res.render("register");
+    }
+    passport.authenticate("local")(req, res, function() {
+      res.redirect("/castles");
+    });
+  });
 });
 
 app.listen(3000, function() {
