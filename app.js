@@ -32,6 +32,16 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Provide currentUser on every route
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
+// ===========
+// ROUTES
+// ===========
+
 app.get("/", function(req, res) {
   res.render("landing");
 });
@@ -43,7 +53,9 @@ app.get("/castles", function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("castles/index", { castles: allCastles });
+      res.render("castles/index", {
+        castles: allCastles
+      });
     }
   });
 });
