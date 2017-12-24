@@ -91,7 +91,7 @@ app.get("/castles/:id", function(req, res) {
 // COMMENTS ROUTES
 //==========================
 
-app.get("/castles/:id/comments/new", function(req, res) {
+app.get("/castles/:id/comments/new", isLoggedIn, function(req, res) {
   // find castle by id
   Castle.findById(req.params.id, function(err, castle) {
     if (err) {
@@ -102,7 +102,7 @@ app.get("/castles/:id/comments/new", function(req, res) {
   });
 });
 
-app.post("/castles/:id/comments", function(req, res) {
+app.post("/castles/:id/comments", isLoggedIn, function(req, res) {
   //lookup castle using ID
   Castle.findById(req.params.id, function(err, castle) {
     if (err) {
@@ -162,6 +162,20 @@ app.post(
   }),
   function(req, res) {}
 );
+
+// logout route
+app.get("/logout", function(req, res) {
+  req.logout();
+  res.redirect("/castles");
+});
+
+// Middleware
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/login");
+}
 
 app.listen(3000, function() {
   console.log("The Castlepedia server has started.");
