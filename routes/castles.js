@@ -91,6 +91,17 @@ router.put("/:id", function(req, res) {
   // Redirect to the show page
 });
 
+// DESTROY Castle route
+router.delete("/:id", function(req, res) {
+  Castle.findByIdAndRemove(req.params.id, function(err) {
+    if (err) {
+      res.redirect("/castles");
+    } else {
+      res.redirect("/castles");
+    }
+  });
+});
+
 // Middleware
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

@@ -28,7 +28,12 @@
                                 <%=castle.author.username%>
                             </em>
                         </p>
-                        <a class="btn btn-warning" href="/castles/<%=castle._id%>/edit">Edit</a>
+                        <a class="btn btn-sm btn-warning" href="/castles/<%=castle._id%>/edit">Edit</a>
+                        <form id="delete-form" action="/castles/<%=castle._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <div class="card card-body bg-light">
