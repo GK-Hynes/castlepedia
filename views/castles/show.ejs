@@ -14,7 +14,7 @@
                 <div class="card">
                     <img class="card-img-top" src="<%= castle.image%>" alt="Image of <%= castle.name%>">
                     <div class="card-body">
-                        <h4 class="card-text text-right">€9.00/adult</h4>
+                        <h4 class="card-text float-right">€9.00/adult</h4>
                         <h1 class="card-title">
                             <a href="#">
                                 <%= castle.name%>
@@ -28,12 +28,14 @@
                                 <%=castle.author.username%>
                             </em>
                         </p>
+                        <% if(currentUser && castle.author.id.equals(currentUser._id)){ %>
                         <a class="btn btn-sm btn-warning" href="/castles/<%=castle._id%>/edit">Edit</a>
                         <form id="delete-form" action="/castles/<%=castle._id%>?_method=DELETE" method="POST">
                             <button class="btn btn-sm btn-danger">
                                 Delete
                             </button>
                         </form>
+                        <% } %>
                     </div>
                 </div>
                 <div class="card card-body bg-light">

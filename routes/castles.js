@@ -65,18 +65,14 @@ router.get("/:id", function(req, res) {
 });
 
 // EDIT Castle route
-router.get("/:id/edit", function(req, res) {
+router.get("/:id/edit", checkCastleOwnership, function(req, res) {
   Castle.findById(req.params.id, function(err, foundCastle) {
-    if (err) {
-      res.redirect("/castles");
-    } else {
-      res.render("castles/edit", { castle: foundCastle });
-    }
+    res.render("castles/edit", { castle: foundCastle });
   });
 });
 
 // UPDATE Castle route
-router.put("/:id", function(req, res) {
+router.put("/:id", checkCastleOwnership, function(req, res) {
   // Find and update the correct castle
   Castle.findByIdAndUpdate(req.params.id, req.body.castle, function(
     err,
@@ -92,7 +88,7 @@ router.put("/:id", function(req, res) {
 });
 
 // DESTROY Castle route
-router.delete("/:id", function(req, res) {
+router.delete("/:id", checkCastleOwnership, function(req, res) {
   Castle.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
       res.redirect("/castles");
@@ -108,6 +104,25 @@ function isLoggedIn(req, res, next) {
     return next();
   }
   res.redirect("/login");
+}
+
+function checkCastleOwnership(req, res, next) {
+  if (req.isAuthenticated()) {
+    Castle.findById(req.params.id, function(err, foundCastle) {
+      if (err) {
+        res.redirect("/castles");
+      } else {
+        // does user own the castle?
+        if (foundCastle.author.id.equals(req.user._id)) {
+          next();
+        } else {
+          res.redirect("back");
+        }
+      }
+    });
+  } else {
+    res.redirect("back");
+  }
 }
 
 module.exports = router;
