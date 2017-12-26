@@ -3,7 +3,7 @@ var router = express.Router({ mergeParams: true });
 var Castle = require("../models/castle");
 var Comment = require("../models/comment");
 
-// Comments new
+// NEW Comments
 router.get("/new", isLoggedIn, function(req, res) {
   // find castle by id
   Castle.findById(req.params.id, function(err, castle) {
@@ -15,7 +15,7 @@ router.get("/new", isLoggedIn, function(req, res) {
   });
 });
 
-// Comments create
+// CREATE Comments
 router.post("/", isLoggedIn, function(req, res) {
   //lookup castle using ID
   Castle.findById(req.params.id, function(err, castle) {
@@ -39,6 +39,34 @@ router.post("/", isLoggedIn, function(req, res) {
           res.redirect("/castles/" + castle._id);
         }
       });
+    }
+  });
+});
+
+// EDIT Comments
+router.get("/:comment_id/edit", function(req, res) {
+  Comment.findById(req.params.comment_id, function(err, foundComment) {
+    if (err) {
+      res.redirect("back");
+    } else {
+      res.render("comments/edit", {
+        castle_id: req.params.id,
+        comment: foundComment
+      });
+    }
+  });
+});
+
+// UPDATE Comments
+router.put("/:comment_id", function(req, res) {
+  Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(
+    err,
+    updatedComment
+  ) {
+    if (err) {
+      res.redirect("back");
+    } else {
+      res.redirect("/castles/" + req.params.id);
     }
   });
 });
