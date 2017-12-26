@@ -64,6 +64,33 @@ router.get("/:id", function(req, res) {
     });
 });
 
+// EDIT Castle route
+router.get("/:id/edit", function(req, res) {
+  Castle.findById(req.params.id, function(err, foundCastle) {
+    if (err) {
+      res.redirect("/castles");
+    } else {
+      res.render("castles/edit", { castle: foundCastle });
+    }
+  });
+});
+
+// UPDATE Castle route
+router.put("/:id", function(req, res) {
+  // Find and update the correct castle
+  Castle.findByIdAndUpdate(req.params.id, req.body.castle, function(
+    err,
+    updatedCastle
+  ) {
+    if (err) {
+      res.redirect("/castles");
+    } else {
+      res.redirect("/castles/" + req.params.id);
+    }
+  });
+  // Redirect to the show page
+});
+
 // Middleware
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

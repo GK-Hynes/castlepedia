@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var localStrategy = require("passport-local");
+var methodOverride = require("method-override");
 var session = require("express-session");
 var Castle = require("./models/castle");
 var Comment = require("./models/comment");
@@ -20,6 +21,7 @@ mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 // seedDB(); Seed the database
 
 // PASSPORT CONFIGURATION
