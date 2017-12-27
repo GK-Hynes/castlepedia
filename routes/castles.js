@@ -57,7 +57,6 @@ router.get("/:id", function(req, res) {
       if (err) {
         console.log(err);
       } else {
-        console.log(foundCastle);
         // render show template with that castle
         res.render("castles/show", { castle: foundCastle });
       }
@@ -110,7 +109,7 @@ function checkCastleOwnership(req, res, next) {
   if (req.isAuthenticated()) {
     Castle.findById(req.params.id, function(err, foundCastle) {
       if (err) {
-        res.redirect("/castles");
+        res.redirect("back");
       } else {
         // does user own the castle?
         if (foundCastle.author.id.equals(req.user._id)) {
