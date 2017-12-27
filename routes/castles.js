@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Castle = require("../models/castle");
+var middleware = require("../middleware");
 
 //INDEX - show all castles
 router.get("/", function(req, res) {
@@ -17,7 +18,7 @@ router.get("/", function(req, res) {
 });
 
 //CREATE - add new castles
-router.post("/", isLoggedIn, function(req, res) {
+router.post("/", middleware.isLoggedIn, function(req, res) {
   // get data from form and add to castles array
   var name = req.body.name;
   var image = req.body.image;
@@ -44,7 +45,7 @@ router.post("/", isLoggedIn, function(req, res) {
 });
 
 //NEW - show form to create new castle
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
   res.render("castles/new");
 });
 
@@ -64,14 +65,14 @@ router.get("/:id", function(req, res) {
 });
 
 // EDIT Castle route
-router.get("/:id/edit", checkCastleOwnership, function(req, res) {
+router.get("/:id/edit", middleware.checkCastleOwnership, function(req, res) {
   Castle.findById(req.params.id, function(err, foundCastle) {
     res.render("castles/edit", { castle: foundCastle });
   });
 });
 
 // UPDATE Castle route
-router.put("/:id", checkCastleOwnership, function(req, res) {
+router.put("/:id", middleware.checkCastleOwnership, function(req, res) {
   // Find and update the correct castle
   Castle.findByIdAndUpdate(req.params.id, req.body.castle, function(
     err,
@@ -87,7 +88,7 @@ router.put("/:id", checkCastleOwnership, function(req, res) {
 });
 
 // DESTROY Castle route
-router.delete("/:id", checkCastleOwnership, function(req, res) {
+router.delete("/:id", middleware.checkCastleOwnership, function(req, res) {
   Castle.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
       res.redirect("/castles");
@@ -96,32 +97,5 @@ router.delete("/:id", checkCastleOwnership, function(req, res) {
     }
   });
 });
-
-// Middleware
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-}
-
-function checkCastleOwnership(req, res, next) {
-  if (req.isAuthenticated()) {
-    Castle.findById(req.params.id, function(err, foundCastle) {
-      if (err) {
-        res.redirect("back");
-      } else {
-        // does user own the castle?
-        if (foundCastle.author.id.equals(req.user._id)) {
-          next();
-        } else {
-          res.redirect("back");
-        }
-      }
-    });
-  } else {
-    res.redirect("back");
-  }
-}
 
 module.exports = router;
