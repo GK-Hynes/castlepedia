@@ -22,6 +22,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
   // get data from form and add to castles array
   var name = req.body.name;
   var image = req.body.image;
+  var price = req.body.price;
   var desc = req.body.description;
   var author = {
     id: req.user._id,
@@ -30,6 +31,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
   var newCastle = {
     name: name,
     image: image,
+    price: price,
     description: desc,
     author: author
   };
