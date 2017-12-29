@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var Castle = require("../models/castle");
+var Comment = require("../models/comment");
 var middleware = require("../middleware");
+var geocoder = require("geocoder");
 
 //INDEX - show all castles
 router.get("/", function(req, res) {
@@ -22,27 +24,35 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
   // get data from form and add to castles array
   var name = req.body.name;
   var image = req.body.image;
-  var price = req.body.price;
   var desc = req.body.description;
   var author = {
     id: req.user._id,
     username: req.user.username
   };
-  var newCastle = {
-    name: name,
-    image: image,
-    price: price,
-    description: desc,
-    author: author
-  };
-  // Create a new castle and save to DB
-  Castle.create(newCastle, function(err, newlyCreated) {
-    if (err) {
-      console.log(err);
-    } else {
-      // redirect back to castles page
-      res.redirect("/castles");
-    }
+  var price = req.body.price;
+  geocoder.geocode(req.body.location, function(err, data) {
+    var lat = data.results[0].geometry.location.lat;
+    var lng = data.results[0].geometry.location.lng;
+    var location = data.results[0].formatted_address;
+    var newCastle = {
+      name: name,
+      image: image,
+      description: desc,
+      price: price,
+      author: author,
+      location: location,
+      lat: lat,
+      lng: lng
+    };
+    // Create a new castle and save to DB
+    Castle.create(newCastle, function(err, newlyCreated) {
+      if (err) {
+        console.log(err);
+      } else {
+        // redirect back to castles page
+        res.redirect("/castles");
+      }
+    });
   });
 });
 
@@ -75,18 +85,33 @@ router.get("/:id/edit", middleware.checkCastleOwnership, function(req, res) {
 
 // UPDATE Castle route
 router.put("/:id", middleware.checkCastleOwnership, function(req, res) {
-  // Find and update the correct castle
-  Castle.findByIdAndUpdate(req.params.id, req.body.castle, function(
-    err,
-    updatedCastle
-  ) {
-    if (err) {
-      res.redirect("/castles");
-    } else {
-      res.redirect("/castles/" + req.params.id);
-    }
+  geocoder.geocode(req.body.location, function(err, data) {
+    var lat = data.results[0].geometry.location.lat;
+    var lng = data.results[0].geometry.location.lng;
+    var location = data.results[0].formatted_address;
+    var newData = {
+      name: req.body.name,
+      image: req.body.image,
+      description: req.body.description,
+      price: req.body.price,
+      location: location,
+      lat: lat,
+      lng: lng
+    };
+    // Find and update the correct castle
+    Castle.findByIdAndUpdate(req.params.id, { $set: newData }, function(
+      err,
+      updatedCastle
+    ) {
+      if (err) {
+        req.flash("error", err.message);
+        res.redirect("back");
+      } else {
+        req.flash("success", "Successfully Updated!");
+        res.redirect("/castles/" + req.params.id);
+      }
+    });
   });
-  // Redirect to the show page
 });
 
 // DESTROY Castle route
