@@ -19,24 +19,29 @@
         </button>
 
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="nav navbar-nav">
+                <li class="<%= typeof page !== 'undefined' && page === 'castles' ? 'active' : '' %>">
+                    <a class="nav-link" href="/castles">Home</a>
+                </li>
+            </ul>
             <ul class="navbar-nav ml-auto">
-                <%if(!currentUser){%>
-                    <li class="nav-item active">
+                <% if(!currentUser){ %>
+                    <li class="nav-item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>">
                         <a class="nav-link" href="/login">Login</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>">
                         <a class="nav-link" href="/register">Sign Up</a>
                     </li>
-                    <% } else {%>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Signed In As
+                    <% } else { %>
+                        <li>
+                            <a href="#">Signed In As
                                 <%= currentUser.username %>
                             </a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/logout">Logout</a>
+                        <li class="nav-item">
+                            <a href="/logout">Logout</a>
                         </li>
-                        <% }%>
+                        <% } %>
             </ul>
 
         </div>

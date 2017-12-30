@@ -13,7 +13,8 @@ router.get("/", function(req, res) {
       console.log(err);
     } else {
       res.render("castles/index", {
-        castles: allCastles
+        castles: allCastles,
+        page: "castles"
       });
     }
   });
