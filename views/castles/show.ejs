@@ -1,59 +1,63 @@
 <% include ../partials/header %>
 
-        <div class="row">
-            <div class="col-md-3">
-                <h2 class="lead">Castlepedia</h2>
-                <div class="list-group">
-                    <li class="list-group-item active">Info 1</li>
-                    <li class="list-group-item">Info 2</li>
-                    <li class="list-group-item">Info 3</li>
-                </div>
-                <div id="map"></div>
+    <div class="row">
+        <div class="col-md-3">
+            <h2 class="lead">Castlepedia</h2>
+            <div class="list-group">
+                <li class="list-group-item active">Info 1</li>
+                <li class="list-group-item">Info 2</li>
+                <li class="list-group-item">Info 3</li>
             </div>
-            <div class="col-md-9">
-                <div class="card">
-                    <img class="card-img-top" src="<%= castle.image%>" alt="Image of <%= castle.name%>">
-                    <div class="card-body">
-                        <h4 class="card-text float-right">€<%=castle.price%>/adult</h4>
-                        <h1 class="card-title">
-                            <a href="#">
-                                <%= castle.name%>
-                            </a>
-                        </h1>
-                        <p>
-                            <%=castle.description%>
-                        </p>
-                        <p>
-                            <em>Submitted by
-                                <%=castle.author.username%>
-                            </em>
-                        </p>
-                        <% if(currentUser && castle.author.id.equals(currentUser._id)){ %>
-                            <a class="btn btn-sm btn-warning" href="/castles/<%=castle._id%>/edit">Edit</a>
-                            <form class="delete-form" action="/castles/<%=castle._id%>?_method=DELETE" method="POST">
-                                <button class="btn btn-sm btn-danger">
-                                    Delete
-                                </button>
-                            </form>
-                            <% } %>
-                    </div>
+            <div id="map"></div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <img class="card-img-top" src="<%= castle.image%>" alt="Image of <%= castle.name%>">
+                <div class="card-body">
+                    <h4 class="card-text float-right">Entrance: €
+                        <%=castle.price%>/adult</h4>
+                    <h1 class="card-title">
+                        <a href="#">
+                            <%= castle.name%>
+                        </a>
+                    </h1>
+                    <p>
+                        <%=castle.description%>
+                    </p>
+                    <p>
+                        <em>Submitted by
+                            <%=castle.author.username%>,
+                                <%= moment(castle.createdAt).fromNow() %>
+                        </em>
+                    </p>
+                    <% if(currentUser && castle.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-sm btn-warning" href="/castles/<%=castle._id%>/edit">Edit</a>
+                        <form class="delete-form" action="/castles/<%=castle._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                        <% } %>
                 </div>
-                <div class="card card-body bg-light">
-                    <div class="text-right">
-                        <a class="btn btn-success" href="/castles/<%=castle._id%>/comments/new">Add New Comment</a>
-                    </div>
-                    <hr>
-                    <% castle.comments.forEach(function(comment){ %>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <strong>
-                                    <%= comment.author.username%>
-                                </strong>
-                                <span class="text-right">10 days ago</span>
-                                <p>
-                                    <%= comment.text%>
-                                </p>
-                                <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+            </div>
+            <div class="card card-body bg-light">
+                <div class="text-right">
+                    <a class="btn btn-success" href="/castles/<%=castle._id%>/comments/new">Add New Comment</a>
+                </div>
+                <hr>
+                <% castle.comments.forEach(function(comment){ %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>
+                                <%= comment.author.username%>
+                            </strong>
+                            <span class="text-right">
+                                <%= moment(comment.createdAt).fromNow() %>
+                            </span>
+                            <p>
+                                <%= comment.text%>
+                            </p>
+                            <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
                                 <a class="btn btn-sm btn-warning" href="/castles/<%=castle._id%>/comments/<%=comment._id%>/edit">Edit</a>
                                 <form class="delete-form" action="/castles/<%=castle._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
                                     <button class="btn btn-sm btn-danger">
@@ -61,40 +65,40 @@
                                     </button>
                                 </form>
                                 <% } %>
-                            </div>
                         </div>
-                        <% }); %>
-                </div>
+                    </div>
+                    <% }); %>
             </div>
         </div>
+    </div>
 
-        <script>
-  function initMap() {
-    var lat = <%= castle.lat %>;
-    var lng = <%= castle.lng %>;
-    var center = {lat: lat, lng: lng };
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 8,
-        center: center,
-        scrollwheel: false
-    });
-    var contentString = `
+    <script>
+        function initMap() {
+            var lat = <%= castle.lat %>;
+            var lng = <%= castle.lng %>;
+            var center = { lat: lat, lng: lng };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: center,
+                scrollwheel: false
+            });
+            var contentString = `
       <strong><%= castle.name %><br />
       <%= castle.location %></strong>
       <p><%= castle.description %></p>
     `
-    var infowindow = new google.maps.InfoWindow({
-      content: contentString
-    });
-    var marker = new google.maps.Marker({
-        position: center,
-        map: map
-    });
-    marker.addListener('click', function() {
-      infowindow.open(map, marker);
-    });
-  }
-</script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4pRqdI3fvCaINs47XeQBUbMh1YSzXuTg&callback=initMap"></script>
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            var marker = new google.maps.Marker({
+                position: center,
+                map: map
+            });
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4pRqdI3fvCaINs47XeQBUbMh1YSzXuTg&callback=initMap"></script>
 
     <% include ../partials/footer %>
