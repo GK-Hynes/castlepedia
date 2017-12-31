@@ -1,35 +1,37 @@
 <% include ../partials/header %>
 
     <% if(currentUser && currentUser.isAdmin) { %>
-    <h1>Logged in as Admin</h1>
-    <% } %>
+        <h1>Logged in as Admin</h1>
+        <% } %>
 
-        <header class="jumbotron">
-            <div class="container">
-                <h1>Welcome to Castlepedia</h1>
-                <p>View castles and other historical sites from all over the world. Start planning your next trip here.</p>
-                <p>
-                    <a class="btn btn-primary btn-lg" href="/castles/new">Add New Castle</a>
-                </p>
-            </div>
-        </header>
-
-        <div class="row text-center" style="display:flex; flex-wrap:wrap;">
-            <% castles.forEach(function(castle){ %>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
-                        <img class="card-img-top" src="<%= castle.image %>" alt="Image of <%= castle.name %>">
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <%= castle.name %>
-                            </h4>
-                        </div>
-                        <p>
-                            <a href="/castles/<%= castle._id %>" class="btn btn-primary">More Info</a>
-                        </p>
-                    </div>
+            <header class="jumbotron">
+                <div class="container">
+                    <h1>
+                        <i class="fa fa-fort-awesome fa-2x" aria-hidden="true"></i>
+                        Welcome to Castlepedia</h1>
+                    <p>View castles and other historical sites from all over the world. Start planning your next trip here.</p>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="/castles/new">Add New Castle</a>
+                    </p>
                 </div>
-                <% }); %>
-        </div>
+            </header>
 
-    <% include ../partials/footer %>
+            <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+                <% castles.forEach(function(castle){ %>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card">
+                            <img class="card-img-top" src="<%= castle.image %>" alt="Image of <%= castle.name %>">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <%= castle.name %>
+                                </h4>
+                            </div>
+                            <p>
+                                <a href="/castles/<%= castle._id %>" class="btn btn-primary">More Info</a>
+                            </p>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+
+            <% include ../partials/footer %>
