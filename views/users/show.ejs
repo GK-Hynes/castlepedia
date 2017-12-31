@@ -1,0 +1,34 @@
+<% include ../partials/header %>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <h1 class="card-title">
+                    <%= user.firstName + " " + user.lastName %>
+                </h1>
+                <img class="card-img-bottom" src="<%= user.avatar%>" alt="User profile image">
+            </div>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, dolor molestiae ea fuga numquam eum aliquam minus
+                similique natus nobis aperiam voluptates dignissimos tenetur, fugit minima quasi velit adipisci esse!
+            </p>
+        </div>
+        <div class="col-md-8">
+            <h2>
+                <%= user.username%>'s Castles:
+            </h2>
+            <ul>
+                <% castles.forEach(function(castle) { %>
+                    <li>
+                        <a href="/castles/<%=castle.id%>">
+                            <%= castle.name %>
+                        </a>
+                    </li>
+
+            </ul>
+            <% }); %>
+        </div>
+
+    </div>
+
+    <% include ../partials/footer %>

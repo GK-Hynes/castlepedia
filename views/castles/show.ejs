@@ -26,8 +26,10 @@
                     </p>
                     <p>
                         <em>Submitted by:
-                            <%=castle.author.username%>,
-                                <%= moment(castle.createdAt).fromNow() %>
+                            <a href="/users/<%=castle.author.id%>">
+                                <%=castle.author.username%>
+                            </a>,
+                            <%= moment(castle.createdAt).fromNow() %>
                         </em>
                     </p>
                     <% if(currentUser && castle.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
