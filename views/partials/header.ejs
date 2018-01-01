@@ -30,19 +30,23 @@
             <ul class="navbar-nav ml-auto">
                 <% if(!currentUser){ %>
                     <li class="nav-item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="/login">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
                     </li>
                     <li class="nav-item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>">
-                        <a class="nav-link" href="/register">Sign Up</a>
+                        <a class="nav-link" href="/register">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
                     </li>
                     <% } else { %>
                         <li class="nav-item">
-                            <a a class="nav-link" href="#">Signed In As
+                            <a a class="nav-link" href="#">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i> Signed in as
                                 <%= currentUser.username %>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a a class="nav-link" href="/logout">Logout</a>
+                            <a a class="nav-link" href="/logout">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
                         </li>
                         <% } %>
             </ul>
