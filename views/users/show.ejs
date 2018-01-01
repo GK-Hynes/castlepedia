@@ -8,25 +8,34 @@
                 </h1>
                 <img class="card-img-bottom" src="<%= user.avatar%>" alt="User profile image">
             </div>
+            <h2>Bio:</h2>
             <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, dolor molestiae ea fuga numquam eum aliquam minus
-                similique natus nobis aperiam voluptates dignissimos tenetur, fugit minima quasi velit adipisci esse!
+                <%= user.bio %>
             </p>
+            <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                <div class="text-center">
+                    <a class=" btn btn-lg btn-warning" href="/users/<%= user._id %>/edit"> Edit Profile </a>
+                </div>
+                <% } %>
         </div>
         <div class="col-md-8">
-            <h2>
-                <%= user.username%>'s Castles:
-            </h2>
+            <h3>
+                Castles posted by
+                <%= user.username %>
+            </h3>
             <ul>
-                <% castles.forEach(function(castle) { %>
-                    <li>
-                        <a href="/castles/<%=castle.id%>">
-                            <%= castle.name %>
-                        </a>
-                    </li>
-
+                <% if(castles.length < 1){ %>
+                    <h3>No castles submitted yet...</h3>
+                    <% } else { %>
+                        <% castles.forEach(function(castle) { %>
+                            <li>
+                                <a href="/castles/<%=castle.id%>">
+                                    <%= castle.name %>
+                                </a>
+                            </li>
+                        <% }); %>
+                <% }; %>
             </ul>
-            <% }); %>
         </div>
 
     </div>

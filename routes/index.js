@@ -22,7 +22,8 @@ router.post("/register", function(req, res) {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     avatar: req.body.avatar,
-    email: req.body.email
+    email: req.body.email,
+    bio: req.body.bio
   });
   if (req.body.adminCode === "linustechtips") {
     newUser.isAdmin = true;
@@ -33,7 +34,10 @@ router.post("/register", function(req, res) {
       return res.render("register", { error: err.message });
     }
     passport.authenticate("local")(req, res, function() {
-      req.flash("success", "Welcome to Castlepedia " + user.username);
+      req.flash(
+        "success",
+        "Successfully signed up! Welcome to Castlepedia " + user.username
+      );
       res.redirect("/castles");
     });
   });
@@ -64,9 +68,9 @@ router.get("/logout", function(req, res) {
 // USER PROFILES
 router.get("/users/:id", function(req, res) {
   User.findById(req.params.id, function(err, foundUser) {
-    if (err) {
+    if (err || !foundUser) {
       req.flash("error", "User not found");
-      res.redirect("/");
+      res.redirect("/castles");
     }
     // Find all castles created by this user
     Castle.find()
@@ -75,10 +79,43 @@ router.get("/users/:id", function(req, res) {
       .exec(function(err, castles) {
         if (err) {
           req.flash("error", "Castles not found");
-          res.redirect("/");
+          res.redirect("back");
         }
         res.render("users/show", { user: foundUser, castles: castles });
       });
+  });
+});
+
+// EDIT USER PROFILE ROUTE
+router.get("/users/:id/edit", function(req, res) {
+  User.findById(req.params.id, function(err, foundUser) {
+    if (err || !foundUser) {
+      req.flash("error", "User not found");
+      res.redirect("back");
+    } else {
+      res.render("users/edit", { user: foundUser });
+    }
+  });
+});
+
+// UPDATE USER PROFILE ROUTE
+router.put("/users/:id", function(req, res) {
+  var newData = {
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    avatar: req.body.avatar,
+    bio: req.body.bio
+  };
+  User.findByIdAndUpdate(req.params.id, { $set: newData }, function(err, user) {
+    if (err) {
+      req.flash("error", "User not found");
+      res.redirect("back");
+    } else {
+      req.flash("success", "Profile Updated!");
+      res.redirect("/users/" + user._id);
+    }
   });
 });
 
