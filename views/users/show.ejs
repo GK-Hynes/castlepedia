@@ -4,8 +4,12 @@
         <div class="col-md-4">
             <div class="card">
                 <h1 class="card-title">
-                    <%= user.firstName + " " + user.lastName %>
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <%= user.username %>
                 </h1>
+                <h2>
+                    <%= user.firstName + " " + user.lastName %>
+                </h2>
                 <img class="card-img-bottom" src="<%= user.avatar%>" alt="User profile image">
             </div>
             <h2>Bio:</h2>
@@ -33,8 +37,8 @@
                                     <%= castle.name %>
                                 </a>
                             </li>
-                        <% }); %>
-                <% }; %>
+                            <% }); %>
+                                <% }; %>
             </ul>
         </div>
 
