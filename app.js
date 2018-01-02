@@ -12,6 +12,9 @@ var Comment = require("./models/comment");
 var User = require("./models/user");
 var seedDB = require("./seeds");
 
+// configure dotenv
+require("dotenv").config();
+
 // Require routes
 var castleRoutes = require("./routes/castles");
 var commentRoutes = require("./routes/comments");
