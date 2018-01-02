@@ -91,7 +91,7 @@ router.post("/forgot", function(req, res, next) {
           }
 
           user.resetPasswordToken = token;
-          user.resetPasswordExpires = Date.now() + 360000; // 1 hour
+          user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
           user.save(function(err) {
             done(err, token, user);
@@ -144,9 +144,11 @@ router.post("/forgot", function(req, res, next) {
 
 // Handle password reset tokens
 router.get("/reset/:token", function(req, res) {
-  User.findOne({
-    resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() },
+  User.findOne(
+    {
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() }
+    },
     function(err, user) {
       if (!user) {
         req.flash("error", "password reset token is invalid or has expired.");
@@ -154,7 +156,7 @@ router.get("/reset/:token", function(req, res) {
       }
       res.render("reset", { token: req.params.token });
     }
-  });
+  );
 });
 
 router.post("/reset/:token", function(req, res) {
@@ -209,7 +211,7 @@ router.post("/reset/:token", function(req, res) {
           subject: "Your password has been changed",
           text:
             "Hello, \n\n" +
-            "This is a confirmation that the password for your account " +
+            "This is a confirmation that the password for the Castlepedia account connected to the email: " +
             user.email +
             " has just been changed."
         };
