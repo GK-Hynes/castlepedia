@@ -104,6 +104,9 @@ router.post("/forgot", function(req, res, next) {
           auth: {
             user: "castlepedia@gmail.com",
             pass: process.env.GMAILPWD
+          },
+          tls: {
+            rejectUnauthorized: false
           }
         });
         var mailOptions = {
@@ -195,6 +198,9 @@ router.post("/reset/:token", function(req, res) {
           auth: {
             user: "castlepedia@gmail.com",
             pass: process.env.GMAILPWD
+          },
+          tls: {
+            rejectUnauthorized: false
           }
         });
         var mailOptions = {
