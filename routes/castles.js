@@ -7,17 +7,31 @@ var geocoder = require("geocoder");
 
 //INDEX - show all castles
 router.get("/", function(req, res) {
-  // Get all castles from DB
-  Castle.find({}, function(err, allCastles) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render("castles/index", {
-        castles: allCastles,
-        page: "castles"
-      });
-    }
-  });
+  if (req.query.search) {
+    var regex = new RegExp(escapeRegex(req.query.search), "gi");
+    Castle.find({ name: regex }, function(err, allCastles) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("castles/index", {
+          castles: allCastles,
+          page: "castles"
+        });
+      }
+    });
+  } else {
+    // Get all castles from DB
+    Castle.find({}, function(err, allCastles) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("castles/index", {
+          castles: allCastles,
+          page: "castles"
+        });
+      }
+    });
+  }
 });
 
 //CREATE - add new castles
@@ -125,5 +139,10 @@ router.delete("/:id", middleware.checkCastleOwnership, function(req, res) {
     }
   });
 });
+
+// Define escapeRegex function for search feature
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
