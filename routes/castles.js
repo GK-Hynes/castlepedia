@@ -4,6 +4,31 @@ var Castle = require("../models/castle");
 var Comment = require("../models/comment");
 var middleware = require("../middleware");
 var geocoder = require("geocoder");
+var multer = require("multer");
+var cloudinary = require("cloudinary");
+
+// Configure multer
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function(req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+    return cb(new Error("Only image files are allowed!"), false);
+  }
+  cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter });
+
+// Configure cloudinary
+cloudinary.config({
+  cloud_name: "gerhynes",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  moderation: "webpurify"
+});
 
 //INDEX - show all castles
 router.get("/", function(req, res) {
@@ -35,7 +60,10 @@ router.get("/", function(req, res) {
 });
 
 //CREATE - add new castles
-router.post("/", middleware.isLoggedIn, function(req, res) {
+router.post("/", middleware.isLoggedIn, upload.single("image"), function(
+  req,
+  res
+) {
   // get data from form and add to castles array
   var name = req.body.name;
   var image = req.body.image;
@@ -49,24 +77,29 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
     var lat = data.results[0].geometry.location.lat;
     var lng = data.results[0].geometry.location.lng;
     var location = data.results[0].formatted_address;
-    var newCastle = {
-      name: name,
-      image: image,
-      description: desc,
-      price: price,
-      author: author,
-      location: location,
-      lat: lat,
-      lng: lng
-    };
-    // Create a new castle and save to DB
-    Castle.create(newCastle, function(err, newlyCreated) {
-      if (err) {
-        console.log(err);
-      } else {
-        // redirect back to castles page
-        res.redirect("/castles");
-      }
+    // Image upload with Cloudinary
+    cloudinary.uploader.upload(req.file.path, function(result) {
+      image = result.secure_url;
+      var newCastle = {
+        name: name,
+        image: image,
+        description: desc,
+        price: price,
+        author: author,
+        location: location,
+        lat: lat,
+        lng: lng
+      };
+      // Create a new castle and save to DB
+      Castle.create(newCastle, function(err, newlyCreated) {
+        if (err) {
+          console.log(err);
+          req.flash("error", err.message);
+        } else {
+          // redirect back to castles page
+          res.redirect("/castles");
+        }
+      });
     });
   });
 });
