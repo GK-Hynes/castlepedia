@@ -13,12 +13,12 @@ var storage = multer.diskStorage({
     callback(null, Date.now() + file.originalname);
   }
 });
-var imageFilter = function(req, file, cb) {
+var imageFilter = function(req, file, callback) {
   // accept image files only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-    return cb(new Error("Only image files are allowed!"), false);
+    return callback(new Error("Only image files are allowed!"), false);
   }
-  cb(null, true);
+  callback(null, true);
 };
 var upload = multer({ storage: storage, fileFilter: imageFilter });
 
