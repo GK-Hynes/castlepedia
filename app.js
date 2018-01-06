@@ -18,6 +18,7 @@ require("dotenv").config();
 // Require routes
 var castleRoutes = require("./routes/castles");
 var commentRoutes = require("./routes/comments");
+var userRoutes = require("./routes/users");
 var indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb://localhost/castlepedia", { useMongoClient: true });
@@ -55,6 +56,7 @@ app.use(function(req, res, next) {
 
 app.use("/castles", castleRoutes);
 app.use("/castles/:id/comments", commentRoutes);
+app.use("/users", userRoutes);
 app.use("/", indexRoutes);
 
 app.listen(3000, function() {
