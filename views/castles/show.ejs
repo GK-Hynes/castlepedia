@@ -94,15 +94,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <strong>
-                                        <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
-                                            <!--If the current user owns the comment, change the color of the user icon-->
-                                            <span style="color: orange;" class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                            <% } else { %>
-                                                <!--Else just display it black-->
-                                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                                <% } %>
-                                                    <!--Print out the author username-->
-                                                    <%= comment.author.username %>
+                                        <!--Print out the author username-->
+                                        <%= comment.author.username %>
                                     </strong>
 
                                     <!--Show when the comment was made-->
@@ -120,7 +113,7 @@
                                 </div>
                                 <!--Edit button used for collapsing the edit comment form-->
                                 <a class="btn btn-sm btn-warning" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>" aria-expanded="false"
-                                    aria-controls="collapse<%= comment._id %>">
+                                    aria-controls="collapse<%= comment._id %>" style="margin: 0 .5em">
                                     Edit</a>
 
                                 <!--Delete comment button-->
