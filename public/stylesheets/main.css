@@ -23,18 +23,22 @@
   width: 100%;
 }
 
-#landing-header {
+.landing-header {
   z-index: 1;
   position: relative;
   text-align: center;
   padding-top: 40vh;
 }
 
-#landing-header h1 {
+.landing-header h1 {
   color: #fff;
   font-family: "Uncial Antiqua", cursive;
   font-size: 2.8rem;
   margin-bottom: 1.5rem;
+}
+
+.btn--view {
+  margin-bottom: 1em;
 }
 
 .slideshow {

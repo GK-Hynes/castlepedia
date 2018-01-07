@@ -23,9 +23,21 @@
                     <% } %>
     </div>
 
-    <div id="landing-header">
+    <div class="landing-header">
         <h1>Welcome to Castlepedia</h1>
-        <a href="/castles" class="btn btn-lg btn-info">View All Castles</a>
+        <a href="/castles" class="btn btn-lg btn-info btn--view">View All Castles</a>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xs-8 col-xs-offset-2">
+                    <form action="/castles" method="GET" class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="search" placeholder="Castle search...">
+                            <input type="submit" class="btn btn-info" value="Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <ul class="slideshow">
