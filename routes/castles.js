@@ -32,30 +32,51 @@ cloudinary.config({
 
 //INDEX - show all castles
 router.get("/", function(req, res) {
+  var perPage = 8;
+  var pageQuery = parseInt(req.query.page);
+  var pageNumber = pageQuery ? pageQuery : 1;
+  var noMatch = null;
   if (req.query.search) {
     var regex = new RegExp(escapeRegex(req.query.search), "gi");
-    Castle.find({ name: regex }, function(err, allCastles) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render("castles/index", {
-          castles: allCastles,
-          page: "castles"
+    Castle.find({ name: regex })
+      .skip(perPage * pageNumber - perPage)
+      .limit(perPage)
+      .exec(function(err, allCastles) {
+        Castle.count({ name: regex }).exec(function(err, count) {
+          if (err) {
+            console.log(err);
+            res.redirect("back");
+          } else {
+            res.render("castles/index", {
+              castles: allCastles,
+              current: pageNumber,
+              pages: Math.ceil(count / perPage),
+              noMatch: noMatch,
+              search: req.query.search
+            });
+          }
         });
-      }
-    });
+      });
   } else {
     // Get all castles from DB
-    Castle.find({}, function(err, allCastles) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render("castles/index", {
-          castles: allCastles,
-          page: "castles"
+    Castle.find({})
+      .skip(perPage * pageNumber - perPage)
+      .limit(perPage)
+      .exec(function(err, allCastles) {
+        Castle.count().exec(function(err, count) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.render("castles/index", {
+              castles: allCastles,
+              current: pageNumber,
+              pages: Math.ceil(count / perPage),
+              noMatch: noMatch,
+              search: false
+            });
+          }
         });
-      }
-    });
+      });
   }
 });
 
