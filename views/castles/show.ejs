@@ -60,7 +60,7 @@
 
                 <!--Collapse Add a comment form START-->
                 <div class="collapse" id="collapseComment">
-                    <div class="card card-body bg-light" style="border-left: 5px solid #00C851;">
+                    <div class="card card-body bg-light comment__comment-border--green">
                         <% if(!currentUser) { %>
                             <!--If the user is not logged in, direct him to the login page-->
                             <h5>You need to login before you can comment.
@@ -90,7 +90,9 @@
 
                 <!--Check if there are comments, if there are none say no comments.-->
                 <% if (castle.comments.length === 0) { %>
-                    <em style="color: grey;">No comments yet.</em>
+                    <p>
+                        <em class="comment__no-comments">No comments yet.</em>
+                    </p>
                     <% } %>
 
                         <!--Display comments by looping through them-->
@@ -116,18 +118,18 @@
                                     <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
                                 </div>
                                 <!--Edit button used for collapsing the edit comment form-->
-                                <a class="btn btn-sm btn-warning" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>" aria-expanded="false"
-                                    aria-controls="collapse<%= comment._id %>" style="margin: 0 .5em">
+                                <a class="btn btn-sm btn-warning btn__btn-edit" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>"
+                                    aria-expanded="false" aria-controls="collapse<%= comment._id %>">
                                     Edit</a>
 
                                 <!--Delete comment button-->
-                                <form id="delete-form" action="/castles/<%= castle._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display: inline;">
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                <form class="delete-form" action="/castles/<%= castle._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-sm btn-danger btn__btn-delete">Delete</button>
                                 </form>
 
                                 <!--Edit comment form-->
                                 <div class="collapse" id="collapseEdit<%= comment._id %>">
-                                    <div class="card card-body bg-light" style="border-left: 5px solid #ffbb33; margin-top: 15px;">
+                                    <div class="card card-body bg-light comment__comment-border--orange">
                                         <h4>Edit your comment</h4>
                                         <form id="edit-comment-form<%= comment._id %>" action="/castles/<%= castle._id %>/comments/<%= comment._id %>?_method=PUT"
                                             method="POST">

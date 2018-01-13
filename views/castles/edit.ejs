@@ -1,8 +1,8 @@
 <% include ../partials/header %>
 
     <div class="row">
-        <div style="width:33%; margin: 2em auto;">
-            <h1 style="text-align: center;">Edit
+        <div class="form__castle-form">
+            <h1 class="form__form-heading">Edit
                 <%=castle.name%>
             </h1>
             <form action="/castles/<%=castle._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
