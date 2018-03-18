@@ -21,8 +21,12 @@ var commentRoutes = require("./routes/comments");
 var userRoutes = require("./routes/users");
 var indexRoutes = require("./routes/index");
 
-mongoose.connect("mongodb://localhost/castlepedia", { useMongoClient: true });
-mongoose.Promise = global.Promise;
+// mongoose.connect("mongodb://localhost/castlepedia", { useMongoClient: true });
+mongoose.connect(
+  "mongodb://gerard:tokaido@ds115729.mlab.com:15729/castlepedia",
+  { useMongoClient: true }
+);
+mongodb: mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
