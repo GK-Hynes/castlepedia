@@ -59,6 +59,6 @@ app.use("/castles/:id/comments", commentRoutes);
 app.use("/users", userRoutes);
 app.use("/", indexRoutes);
 
-app.listen(3000, function() {
+app.listen(3000 || process.env.PORT, process.env.IP, function() {
   console.log("The Castlepedia server has started.");
 });
