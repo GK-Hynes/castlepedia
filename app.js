@@ -21,13 +21,10 @@ var commentRoutes = require("./routes/comments");
 var userRoutes = require("./routes/users");
 var indexRoutes = require("./routes/index");
 
-console.log(process.env.DATABASEURL);
+// Configure database
+var url = process.env.DATABASEURL || "mongodb://localhost/castlepedia";
+mongoose.connect(url, { useMongoClient: true });
 
-mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
-// mongoose.connect(
-//   "mongodb://gerard:tokaido@ds115729.mlab.com:15729/castlepedia",
-//   { useMongoClient: true }
-// );
 mongodb: mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
